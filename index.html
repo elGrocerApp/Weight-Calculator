@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styless.css">
+    <title>Refund Calculator</title>
+    <style>
+        img {
+            width: 50px;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f0f4f8;
+            transition: background-color 0.5s;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin: 20px 0;
+            font-size: 2.5rem;
+            font-weight: 700;
+            transition: color 0.3s;
+        }
+        .container {
+            max-width: 800px;
+            margin: 40px auto;
+            padding: 20px;
+            background: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.2);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #555;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 15px;
+            box-sizing: border-box;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            background: #f9f9f9;
+            transition: border-color 0.3s, background-color 0.3s;
+        }
+        .form-group input:focus {
+            border-color: #28a745;
+            background: #fff;
+            outline: none;
+            box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.2);
+        }
+        .form-group button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .form-group button:hover {
+            background-color: #218838;
+            transform: translateY(-2px);
+        }
+        .form-group button:active {
+            transform: translateY(0);
+        }
+        .hidden {
+            display: none;
+        }
+        .result {
+            margin-top: 20px;
+            padding: 20px;
+            background: #eaf4f4;
+            border: 1px solid #ddd;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: opacity 0.5s;
+            position: relative; /* Added for button positioning */
+        }
+        .result h3 {
+            margin-top: 0;
+            color: #333;
+            font-size: 2rem;
+            font-weight: 600;
+        }
+        .item-box {
+            padding: 20px;
+            margin-bottom: 20px;
+            background: #ffffff;
+            border: 1px solid #ddd;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: box-shadow 0.3s, transform 0.3s;
+        }
+        .item-box:hover {
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+            transform: translateY(-2px);
+        }
+        .item-box label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: 600;
+            color: #555;
+        }
+        .item-box input {
+            width: calc(100% - 24px);
+            margin-bottom: 15px;
+            padding: 10px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            background: #f9f9f9;
+            transition: border-color 0.3s;
+        }
+        .item-box input:focus {
+            border-color: #28a745;
+        }
+        .item-box p {
+            margin: 5px 0;
+            font-size: 0.95rem;
+            color: #333;
+        }
+        .item-box p strong {
+            color: #000000;
+        }
+        .remove-button {
+            background-color: #dc3545; /* Red color for remove button */
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .remove-button:hover {
+            background-color: #c82333;
+            transform: scale(1.05);
+        }
+        .remove-button:active {
+            transform: scale(0.95);
+        }
+        @media (max-width: 600px) {
+            .container {
+                padding: 15px;
+            }
+            .form-group button {
+                width: 100%;
+                padding: 15px;
+                margin-top: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="images/elGrocerIcone.png" class="img-fluid" alt="...">
+        <h1>Refund Calculator</h1>
+        <div class="form-group">
+            <label for="orderNumber">Order Number:</label>
+            <input type="number" id="orderNumber">
+        </div>
+        <div class="form-group">
+            <label for="shopperId">Shopper ID/Shopper's Name:</label>
+            <input type="text" id="shopperId">
+        </div>
+        <div class="form-group">
+            <label for="storeName">Store Name:</label>
+            <input type="text" id="storeName">
+        </div>
+        <div class="form-group">
+            <button id="showDetailsButton">Submit</button>
+            <button id="resetButton">Reset</button>
+        </div>
+        <div id="refundDetails" class="hidden">
+            <h2>Calculate Weight Variance</h2>
+            <div id="itemsContainer"></div>
+            <div class="form-group">
+                <button id="addItemButton">Add Item</button>
+            </div>
+            <div class="form-group">
+                <button id="calculateRefundButton">Calculate Refund</button>
+            </div>
+            <div id="result" class="result"></div>
+        </div>
+    </div>
+    <script>
+        document.getElementById('showDetailsButton').addEventListener('click', function() {
+            document.getElementById('refundDetails').classList.remove('hidden');
+        });
+
+        document.getElementById('resetButton').addEventListener('click', function() {
+            document.getElementById('orderNumber').value = '';
+            document.getElementById('shopperId').value = '';
+            document.getElementById('storeName').value = '';
+            document.getElementById('itemsContainer').innerHTML = '';
+            document.getElementById('refundDetails').classList.add('hidden');
+            document.getElementById('result').innerHTML = '';
+            itemCounter = 1; // Reset item counter
+        });
+
+        let itemCounter = 1;
+
+        document.getElementById('addItemButton').addEventListener('click', function() {
+            const container = document.getElementById('itemsContainer');
+            const itemDiv = document.createElement('div');
+            itemDiv.className = 'item-box';
+            itemDiv.innerHTML = `
+                <label for="itemName${itemCounter}">Item Name:</label>
+                <input type="text" id="itemName${itemCounter}">
+                <label for="orderedWeight${itemCounter}">Ordered Weight (g):</label>
+                <input type="number" id="orderedWeight${itemCounter}">
+                <label for="pricePerApp${itemCounter}">Price As Per Shopper APP (AED):</label>
+                <input type="number" id="pricePerApp${itemCounter}">
+                <label for="receivedWeight${itemCounter}">Received Weight (g):</label>
+                <input type="number" id="receivedWeight${itemCounter}">
+                <label for="actualPrice${itemCounter}">Actual Price (AED):</label>
+                <input type="number" id="actualPrice${itemCounter}">
+                <button class="remove-button" id="removeButton${itemCounter}">Remove</button>
+            `;
+            container.appendChild(itemDiv);
+            itemCounter++;
+
+            // Disable mouse wheel on added input fields
+            disableMouseWheel(`#orderedWeight${itemCounter-1}`);
+            disableMouseWheel(`#pricePerApp${itemCounter-1}`);
+            disableMouseWheel(`#receivedWeight${itemCounter-1}`);
+            disableMouseWheel(`#actualPrice${itemCounter-1}`);
+
+            // Add event listener for remove button
+            itemDiv.querySelector(`#removeButton${itemCounter-1}`).addEventListener('click', function() {
+                container.removeChild(itemDiv);
+                itemCounter--; // Decrement item counter
+                updateItemIDs(); // Update item IDs and refund details
+            });
+        });
+
+        document.getElementById('calculateRefundButton').addEventListener('click', function() {
+            calculateRefund();
+        });
+
+        function updateItemIDs() {
+            const items = document.querySelectorAll('.item-box');
+            items.forEach((item, index) => {
+                const itemNumber = index + 1;
+                item.querySelector('label[for^="itemName"]').setAttribute('for', `itemName${itemNumber}`);
+                item.querySelector('input[id^="itemName"]').setAttribute('id', `itemName${itemNumber}`);
+                item.querySelector('label[for^="orderedWeight"]').setAttribute('for', `orderedWeight${itemNumber}`);
+                item.querySelector('input[id^="orderedWeight"]').setAttribute('id', `orderedWeight${itemNumber}`);
+                item.querySelector('label[for^="pricePerApp"]').setAttribute('for', `pricePerApp${itemNumber}`);
+                item.querySelector('input[id^="pricePerApp"]').setAttribute('id', `pricePerApp${itemNumber}`);
+                item.querySelector('label[for^="receivedWeight"]').setAttribute('for', `receivedWeight${itemNumber}`);
+                item.querySelector('input[id^="receivedWeight"]').setAttribute('id', `receivedWeight${itemNumber}`);
+                item.querySelector('label[for^="actualPrice"]').setAttribute('for', `actualPrice${itemNumber}`);
+                item.querySelector('input[id^="actualPrice"]').setAttribute('id', `actualPrice${itemNumber}`);
+                const removeButton = item.querySelector('button.remove-button');
+                removeButton.setAttribute('id', `removeButton${itemNumber}`);
+            });
+        }
+
+        function calculateRefund() {
+            const orderNumber = document.getElementById('orderNumber').value;
+            const shopperId = document.getElementById('shopperId').value;
+            const storeName = document.getElementById('storeName').value;
+            let resultHTML = `
+                <h3>Refund Details</h3>
+                <p><strong>Order Number:</strong> ${orderNumber}</p>
+                <p><strong>Shopper ID/Shopper's Name:</strong> ${shopperId}</p>
+                <p><strong>Store Name:</strong> ${storeName}</p>
+            `;
+            let totalRefund = 0;
+            for (let i = 1; i < itemCounter; i++) {
+                const itemName = document.getElementById(`itemName${i}`)?.value || 'N/A';
+                const orderedWeight = parseFloat(document.getElementById(`orderedWeight${i}`)?.value) || 0;
+                const pricePerApp = parseFloat(document.getElementById(`pricePerApp${i}`)?.value) || 0;
+                const receivedWeight = parseFloat(document.getElementById(`receivedWeight${i}`)?.value) || 0;
+                const actualPrice = parseFloat(document.getElementById(`actualPrice${i}`)?.value) || 0;
+
+                // Avoid calculating if the item doesn't exist
+                if (!document.getElementById(`itemName${i}`)) continue;
+
+                const gramPrice = orderedWeight ? pricePerApp / orderedWeight : 0; // Prevent division by zero
+                const expectedPrice = gramPrice * receivedWeight;
+                let refund = 0;
+                let refundType = '';
+
+                if (receivedWeight > orderedWeight) {
+                    refund = actualPrice - expectedPrice;
+                    refundType = 'Extra Weight';
+                } else if (receivedWeight < orderedWeight) {
+                    refund = actualPrice - expectedPrice;
+                    refundType = 'Less Weight';
+                } else if (gramPrice !== (actualPrice / receivedWeight)) {
+                    refund = actualPrice - expectedPrice;
+                    refundType = 'Price Variance';
+                }
+
+                totalRefund += refund;
+
+                resultHTML += `
+                    <div class="item-box">
+                        <p><strong>Type: ${refundType}</strong></p>
+                        <p><strong>Item ${i} - ${itemName}</strong></p>
+                        <p>Ordered Weight: ${orderedWeight.toFixed(0)}g</p>
+                        <p>Received Weight: ${receivedWeight.toFixed(0)}g</p>
+                        ${receivedWeight > orderedWeight ? 
+                            `<p>Extra Weight: ${(receivedWeight - orderedWeight).toFixed(0)}g</p>` : 
+                            `<p>Missing Weight: ${(orderedWeight - receivedWeight).toFixed(0)}g</p>`
+                        }
+                        <p>Price Per Gram As Per App: AED${gramPrice.toFixed(4)}</p>
+                        <p>Customer should pay: AED${expectedPrice.toFixed(2)}</p>
+                        <p>Customer has paid: AED${actualPrice.toFixed(2)}</p>
+                        <p>Refund: AED${refund.toFixed(2)}</p>
+                    </div>
+                `;
+            }
+            resultHTML += `
+                <h3>Total</h3>
+                <p><strong>Total Refund:</strong> AED${totalRefund.toFixed(2)}</p>
+            `;
+            document.getElementById('result').innerHTML = resultHTML;
+
+          
+        }
+
+
+        function disableMouseWheel(selector) {
+            const elements = document.querySelectorAll(selector);
+            elements.forEach(element => {
+                element.addEventListener('wheel', function(event) {
+                    event.preventDefault();
+                });
+            });
+        }
+
+        // Disable mouse wheel on initial fields
+        disableMouseWheel('#orderNumber');
+        disableMouseWheel('#shopperId');
+        disableMouseWheel('#storeName');
+    </script>
+</body>
+</html>
